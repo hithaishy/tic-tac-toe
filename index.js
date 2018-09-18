@@ -139,7 +139,7 @@
                         if (won != null) {
                             alert(`${won} Won`);
                             redraw();
-                        } else if (emptyCells === 0) {
+                        } else if (emptyCells === 1) {
                             alert('Match Tied');
                             redraw();
                         }
