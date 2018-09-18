@@ -16,9 +16,9 @@
         1: 'X',
         2: 'O'
     };
-    
+
     function initializeGame() {
-        /*
+        /**
         *This function initializes the game
         *by giving default values to each cell in the game
         * Player 1 starts the game
@@ -33,7 +33,7 @@
         footer.textContent = `${playerValue[game.player]}'s Turn`;
     }
 
-    function redraw(){
+    function redraw() {
         /**
          * Function to restart the game
          */
@@ -49,31 +49,31 @@
         for (i = 0; i < 3; i++)
             result[i] = new Array(3)
         let rows = Array.from(document.getElementsByTagName('tr'));
-        rows.forEach((row,i,rowArr)=>{
+        rows.forEach((row, i, rowArr) => {
             let cols = Array.from(row.getElementsByTagName('td'));
-            cols.forEach((col,j,colArr)=>{
+            cols.forEach((col, j, colArr) => {
                 result[i][j] = parseInt(col.getAttribute("data-points"));
             });
         });
         return result;
-        
+
     }
 
-    function checkAvailableCells(){
+    function checkAvailableCells() {
         /**
          * Function to count available cells
          * @returns count of available cells
          */
         let count = 0;
-        game.table.forEach((cell)=>{
-            if(cell.textContent === ''){
+        game.table.forEach((cell) => {
+            if (cell.textContent === '') {
                 count++;
             }
         });
         return count;
     }
 
-    function checkWinner(){
+    function checkWinner() {
         /**
          * Function to check if there is a winner
          * @returns if there is a winner
@@ -84,15 +84,15 @@
             for (let j = 0; j < 3; j++) {
                 rowSum += result[i][j];
             }
-            if (rowSum === 3){              //check horizontal win condition
-               return playerValue[1];
-            } else if (rowSum === -3){
+            if (rowSum === 3) {              //check horizontal win condition
+                return playerValue[1];
+            } else if (rowSum === -3) {
                 return playerValue[2];
             }
         }
 
         for (let i = 0; i < 3; i++) {
-            let colSum = 0;                 
+            let colSum = 0;
             for (let j = 0; j < 3; j++) {
                 colSum += result[j][i];
             }
@@ -108,18 +108,18 @@
         } else if (result[0][0] + result[1][1] + result[2][2] === -3) {
             return playerValue[2];
         }
-            
+
 
         if (result[2][0] + result[1][1] + result[0][2] === 3) {      //check diagonal win condition  
             return playerValue[1];
-        } else if (result[2][0] + result[1][1] + result[0][2] === -3){
+        } else if (result[2][0] + result[1][1] + result[0][2] === -3) {
             return playerValue[2];
         }
-        
+
     };
-    
-    
-    
+
+
+
     document.addEventListener("DOMContentLoaded", function () {
         initializeGame();
         let grid = document.getElementById('body');
@@ -128,14 +128,14 @@
                 if (event.target.textContent === '') {
                     let text = document.createTextNode(playerValue[game.player]);
                     let footer = document.getElementById('footer');
-                    event.target.setAttribute('data-points', (game.player === 2)? -1 : 1 );
+                    event.target.setAttribute('data-points', (game.player === 2) ? -1 : 1);
                     event.target.appendChild(text);
                     event.target.className = 'click-disabled';
                     (game.player == 1) ? game.player = 2 : game.player = 1;
                     footer.textContent = `${playerValue[game.player]}'s Turn`;
-                    }
-                setTimeout(() => {  //making an async call to check winner
-                    let emptyCells = checkAvailableCells();
+                }
+                setTimeout(() => {  //making an async call to check if we have winner
+                    
                     if (emptyCells <= 6) {
                         let won = null;
                         won = checkWinner();
@@ -143,10 +143,12 @@
                             alert(`${won} Won`);
                             redraw();
                         } else if (emptyCells === 0) {
+                            footer.textContent = "Match Tied"
                             alert('Match Tied');
                             redraw();
                         }
                     }
+                    
                 }, 0);
             }
         });
