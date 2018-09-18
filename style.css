@@ -8,7 +8,15 @@ table, td {
     border: 1px solid black;
 }
 td {
-    width: 10px;
-    height: 10px;
+    width: 30%;
+    height: 30%;
     text-align: center;
+}
+
+.click-enabled {
+    cursor: pointer;
+}
+
+.click-disabled {
+    cursor: default;
 }
