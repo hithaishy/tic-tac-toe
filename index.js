@@ -70,22 +70,18 @@
         };
         let result = computeResultArray();
         for (let i = 0; i < 3; i++) {
-            let rowSum = 0;
+            let rowSum = 0,colSum = 0;
+            
             for (let j = 0; j < 3; j++) {
                 rowSum += result[i][j];
-            }
-            if (rowSum === 3 || rowSum === -3) {              //check horizontal win condition
-                return mapPlayers[rowSum];
-            }
-        }
-
-        for (let i = 0; i < 3; i++) {
-            let colSum = 0;
-            for (let j = 0; j < 3; j++) {
                 colSum += result[j][i];
             }
-            if (colSum === 3 || colSum === -3) {             //check vertical win condition
-                return mapPlayers[colSum];
+            if (rowSum === 3 || rowSum === -3 || colSum === 3 || colSum === -3) {              //check horizontal win condition
+                if(rowSum !== 0){
+                    return mapPlayers[rowSum];
+                } else if (colSum !== 0){
+                    return mapPlayers[colSum];
+                }
             }
         }
         let leftDiagonalsum = result[0][0] + result[1][1] + result[2][2];
@@ -132,6 +128,4 @@
             }
         });
     });
-
 })();
-
