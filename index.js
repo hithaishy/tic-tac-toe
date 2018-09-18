@@ -12,18 +12,18 @@
         1: 'X',
         2: 'O'
     };
-
+    
     function initializeGame() {
         game.table = Array.from(document.getElementsByTagName('td'));
         game.player = 1
         game.table.forEach((element) => {
             element.textContent = '';
-            element.className = 'click-enabled';
         });
         
     }
 
     function redraw(){
+        
         location.reload();
     }
 
@@ -106,19 +106,21 @@
                     event.target.appendChild(text);
                     event.target.className = 'click-disabled';
                     (game.player == 1) ? game.player = 2 : game.player = 1;
+                    }
+                setTimeout(() => {
                     let emptyCells = checkAvailableCells();
-                    if(emptyCells <= 6){
-                        let won = null; 
+                    if (emptyCells <= 6) {
+                        let won = null;
                         won = checkWinner();
-                        if(won != null){
+                        if (won != null) {
                             alert(`${won} Won`);
                             redraw();
                         } else if (emptyCells === 0) {
                             alert('Match Tied');
                             redraw();
                         }
-                    } 
-                }
+                    }
+                }, 0);
             }
         });
     });
