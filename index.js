@@ -128,14 +128,15 @@
                 if (event.target.textContent === '') {
                     let text = document.createTextNode(playerValue[game.player]);
                     let footer = document.getElementById('footer');
+                    let emptyCells = checkAvailableCells();
                     event.target.setAttribute('data-points', (game.player === 2) ? -1 : 1);
                     event.target.appendChild(text);
                     event.target.className = 'click-disabled';
                     (game.player == 1) ? game.player = 2 : game.player = 1;
-                    footer.textContent = `${playerValue[game.player]}'s Turn`;
+                    footer.textContent = ((checkWinner() == null) && (emptyCells === 1)) ? `Match Tied` : `${playerValue[game.player]}'s Turn`; //checking if there is a tie and updating the footer
                 }
                 setTimeout(() => {  //making an async call to check if we have winner
-                    
+                    let emptyCells = checkAvailableCells();
                     if (emptyCells <= 6) {
                         let won = null;
                         won = checkWinner();
@@ -143,12 +144,10 @@
                             alert(`${won} Won`);
                             redraw();
                         } else if (emptyCells === 0) {
-                            footer.textContent = "Match Tied"
                             alert('Match Tied');
                             redraw();
                         }
                     }
-                    
                 }, 0);
             }
         });
