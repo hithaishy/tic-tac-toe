@@ -16,7 +16,7 @@
         1: 'X',
         2: 'O'
     };
-
+    let availableCells = 9;
     function initializeGame() {
         /**
         *This function initializes the game
@@ -59,28 +59,14 @@
 
     }
 
-    function checkAvailableCells() {
-        /**
-         * Function to count available cells
-         * @returns count of available cells
-         */
-        let count = 0;
-        game.table.forEach((cell) => {
-            if (cell.textContent === '') {
-                count++;
-            }
-        });
-        return count;
-    }
-
     function checkWinner() {
         /**
          * Function to check if there is a winner
          * @returns if there is a winner
          */
         let mapPlayers = {
-            '3' : 'X',
-            '-3' : 'O'
+            '3' : 'X',      //if the sum comes to 3 its player 1
+            '-3' : 'O'      //if the sum comes to -3 then its player 2
         };
         let result = computeResultArray();
         for (let i = 0; i < 3; i++) {
@@ -115,14 +101,12 @@
     };
 
 
-
     document.addEventListener("DOMContentLoaded", () => {
         initializeGame();
-        
         let grid = document.getElementById('body');
         grid.addEventListener('click', (event) => {             //adding event listener once the DOM is loaded
             if (event.target && event.target.nodeName === 'TD') {       //Listening to all click events on td
-                let emptyCells = checkAvailableCells();
+                availableCells--;
                 if (event.target.textContent === '') {
                     let text = document.createTextNode(playerValue[game.player]);
                     let footer = document.getElementById('footer');
@@ -130,16 +114,16 @@
                     event.target.appendChild(text);
                     event.target.className = 'click-disabled';
                     (game.player == 1) ? game.player = 2 : game.player = 1;
-                    footer.textContent = ((checkWinner() == null) && (emptyCells === 1)) ? `Match Tied` : `${playerValue[game.player]}'s Turn`; //checking if there is a tie and updating the footer
+                    footer.textContent = ((checkWinner() == null) && (availableCells === 0)) ? `Match Tied` : `${playerValue[game.player]}'s Turn`; //checking if there is a tie and updating the footer
                 }
                 setTimeout(() => {  //making an async call to check if we have winner
-                    if (emptyCells <= 6) {
+                    if (availableCells <= 6) {
                         let won = null;
                         won = checkWinner();
                         if (won != null) {
                             alert(`${won} Won`);
                             redraw();
-                        } else if (emptyCells === 1) {
+                        } else if (availableCells === 0) {
                             alert('Match Tied');
                             redraw();
                         }
