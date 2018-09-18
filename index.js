@@ -23,6 +23,10 @@
         
     }
 
+    function redraw(){
+        location.reload();
+    }
+
     function computeResultArray() {
         let result = new Array(3)
         for (i = 0; i < 3; i++)
@@ -38,18 +42,27 @@
         
     }
 
+    function checkAvailableCells(){
+        let count = 0;
+        game.table.forEach((cell)=>{
+            if(cell.textContent === ''){
+                count++;
+            }
+        });
+        return count;
+    }
+
     function checkWinner(){
         let result = computeResultArray();
-        let Won = null;
         for (let i = 0; i < 3; i++) {
             let rowSum = 0;
             for (let j = 0; j < 3; j++) {
                 rowSum += result[i][j];
             }
             if (rowSum === 3){
-                Won = 'X';
-            } else if (rowSum === 6){
-                Won = 'O';
+               return playerValue[1];
+            } else if (rowSum === -3){
+                return playerValue[2];
             }
         }
 
@@ -59,29 +72,25 @@
                 colSum += result[j][i];
             }
             if (colSum === 3) {
-                Won = 'X';
-            } else if (colSum === 6) {
-                Won = 'O';
+                return playerValue[1];
+            } else if (colSum === -3) {
+                return playerValue[2];
             }
         }
 
         if (result[0][0] + result[1][1] + result[2][2] === 3) {
-            Won = 'O';
-        } else if (result[0][0] + result[1][1] + result[2][2] === 6) {
-            Won = 'O';
+            return playerValue[1];
+        } else if (result[0][0] + result[1][1] + result[2][2] === -3) {
+            return playerValue[2];
         }
             
 
         if (result[2][0] + result[1][1] + result[0][2] === 3){
-            Won = 'X';
-        } else if (result[2][0] + result[1][1] + result[0][2] === 6){
-            Won = 'O';
+            return playerValue[1];
+        } else if (result[2][0] + result[1][1] + result[0][2] === -3){
+            return playerValue[2];
         }
-        if(Won){
-            alert(`${Won} Wins`);
-        } else {
-            alert(`Nobody Won`);
-        }
+        
     };
     
     
@@ -93,11 +102,22 @@
             if (event.target && event.target.nodeName === 'TD') {
                 if (event.target.textContent === '') {
                     let text = document.createTextNode(playerValue[game.player]);
-                    event.target.setAttribute('data-points', game.player);
+                    event.target.setAttribute('data-points', (game.player === 2)? -1 : 1 );
                     event.target.appendChild(text);
                     event.target.className = 'click-disabled';
                     (game.player == 1) ? game.player = 2 : game.player = 1;
-                    
+                    let emptyCells = checkAvailableCells();
+                    if(emptyCells <= 6){
+                        let won = null; 
+                        won = checkWinner();
+                        if(won != null){
+                            alert(`${won} Won`);
+                            redraw();
+                        } else if (emptyCells === 0) {
+                            alert('Match Tied');
+                            redraw();
+                        }
+                    } 
                 }
             }
         });
