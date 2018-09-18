@@ -78,16 +78,18 @@
          * Function to check if there is a winner
          * @returns if there is a winner
          */
+        let mapPlayers = {
+            '3' : 'X',
+            '-3' : 'O'
+        };
         let result = computeResultArray();
         for (let i = 0; i < 3; i++) {
             let rowSum = 0;
             for (let j = 0; j < 3; j++) {
                 rowSum += result[i][j];
             }
-            if (rowSum === 3) {              //check horizontal win condition
-                return playerValue[1];
-            } else if (rowSum === -3) {
-                return playerValue[2];
+            if (rowSum === 3 || rowSum === -3) {              //check horizontal win condition
+                return mapPlayers[rowSum];
             }
         }
 
@@ -96,39 +98,34 @@
             for (let j = 0; j < 3; j++) {
                 colSum += result[j][i];
             }
-            if (colSum === 3) {             //check vertical win condition
-                return playerValue[1];
-            } else if (colSum === -3) {
-                return playerValue[2];
+            if (colSum === 3 || colSum === -3) {             //check vertical win condition
+                return mapPlayers[colSum];
             }
         }
-
-        if (result[0][0] + result[1][1] + result[2][2] === 3) {     //check diagonal win condition  
-            return playerValue[1];
-        } else if (result[0][0] + result[1][1] + result[2][2] === -3) {
-            return playerValue[2];
+        let leftDiagonalsum = result[0][0] + result[1][1] + result[2][2];
+        if (leftDiagonalsum === 3 || leftDiagonalsum === -3) {     //check diagonal win condition  
+            return mapPlayers[leftDiagonalsum];
         }
 
-
-        if (result[2][0] + result[1][1] + result[0][2] === 3) {      //check diagonal win condition  
-            return playerValue[1];
-        } else if (result[2][0] + result[1][1] + result[0][2] === -3) {
-            return playerValue[2];
+        let rightDiagonalSum = result[2][0] + result[1][1] + result[0][2];
+        if (rightDiagonalSum === 3 || rightDiagonalSum === -3) {      //check diagonal win condition  
+            return mapPlayers[rightDiagonalSum];
         }
 
     };
 
 
 
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", () => {
         initializeGame();
+        
         let grid = document.getElementById('body');
         grid.addEventListener('click', (event) => {             //adding event listener once the DOM is loaded
             if (event.target && event.target.nodeName === 'TD') {       //Listening to all click events on td
+                let emptyCells = checkAvailableCells();
                 if (event.target.textContent === '') {
                     let text = document.createTextNode(playerValue[game.player]);
                     let footer = document.getElementById('footer');
-                    let emptyCells = checkAvailableCells();
                     event.target.setAttribute('data-points', (game.player === 2) ? -1 : 1);
                     event.target.appendChild(text);
                     event.target.className = 'click-disabled';
@@ -136,7 +133,6 @@
                     footer.textContent = ((checkWinner() == null) && (emptyCells === 1)) ? `Match Tied` : `${playerValue[game.player]}'s Turn`; //checking if there is a tie and updating the footer
                 }
                 setTimeout(() => {  //making an async call to check if we have winner
-                    let emptyCells = checkAvailableCells();
                     if (emptyCells <= 6) {
                         let won = null;
                         won = checkWinner();
