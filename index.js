@@ -76,12 +76,10 @@
                 rowSum += result[i][j];
                 colSum += result[j][i];
             }
-            if (rowSum === 3 || rowSum === -3 || colSum === 3 || colSum === -3) {              //check horizontal win condition
-                if(rowSum !== 0){
-                    return mapPlayers[rowSum];
-                } else if (colSum !== 0){
-                    return mapPlayers[colSum];
-                }
+            if (rowSum === 3 || rowSum === -3) {
+                return mapPlayers[rowSum];
+            } else if (colSum === 3 || colSum === -3) {
+                return mapPlayers[colSum];
             }
         }
         let leftDiagonalsum = result[0][0] + result[1][1] + result[2][2];
@@ -113,7 +111,7 @@
                     footer.textContent = ((checkWinner() == null) && (availableCells === 0)) ? `Match Tied` : `${playerValue[game.player]}'s Turn`; //checking if there is a tie and updating the footer
                 }
                 setTimeout(() => {  //making an async call to check if we have winner
-                    if (availableCells <= 6) {
+                    if (availableCells <= 4) {
                         let won = null;
                         won = checkWinner();
                         if (won != null) {
